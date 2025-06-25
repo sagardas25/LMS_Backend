@@ -1,0 +1,34 @@
+{
+  "name": "lms_backend",
+  "version": "1.0.0",
+  "description": "LMS backend",
+  "keywords": [
+    "LMS",
+    "paymentgateway"
+  ],
+  "homepage": "https://github.com/sagardas25/LMS_Backend#readme",
+  "bugs": {
+    "url": "https://github.com/sagardas25/LMS_Backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sagardas25/LMS_Backend.git"
+  },
+  "license": "ISC",
+  "author": "Sagar Das",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.0"
+  }
+}
