@@ -10,8 +10,10 @@ class DatabaseConnection {
     this.isConnected = false;
 
     // mongoose configuire
+    // only fields defined in the Mongoose schema are used in queries
     mongoose.set("strictQuery", "throw");
 
+    // event listners
     mongoose.connection.on("connected", () => {
       console.log("MONGODB CONNECTED SUCCESFULLY");
       this.isConnected = true;
@@ -28,7 +30,7 @@ class DatabaseConnection {
       this.handleDisconnection();
     });
 
-    process.on("SIGTERM", this.handleAppTermination().bind("this"));
+    process.on("SIGTERM", this.handleAppTermination.bind("this"));
   }
 
   async connect() {
@@ -66,7 +68,7 @@ class DatabaseConnection {
       );
       await new Promise((resolve) =>
         setTimeout(() => {
-          resolve;
+          resolve();
         }, RETRY_INTERVAL)
       );
 
@@ -107,10 +109,9 @@ class DatabaseConnection {
   }
 }
 
+// create a singleton instance
+// Create a single instance of this class for the whole app
+const dbConnection = new DatabaseConnection();
 
-//create a singleton instance
-
-const dbConnection = new DatabaseConnection()
-
-export default dbConnection.connect.bind(dbConnection)
-export const getDbStatus = dbConnection.getConnectionStatus.bind(dbConnection)
+export default dbConnection.connect.bind(dbConnection);
+export const getDbStatus = dbConnection.getConnectionStatus.bind(dbConnection);
