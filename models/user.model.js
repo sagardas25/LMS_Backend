@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { kMaxLength } from "buffer";
-import { match } from "assert";
+import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
   {
@@ -73,6 +72,10 @@ const userSchema = new mongoose.Schema(
 
     resetPasswordToken: String,
     resetPasswordTokenExpire: Date,
+
+    refreshToken: {
+      type: String,
+    },
 
     lastActive: {
       type: Date,
