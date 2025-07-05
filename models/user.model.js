@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+
+dotenv.config();
 
 const userSchema = new mongoose.Schema(
   {
@@ -115,7 +118,7 @@ userSchema.methods.getResetPasswordToken = function () {
   return resetToken;
 };
 
-// getting last active
+//getting last active
 userSchema.methods.updateLastActive = function () {
   this.lastActive = Date.now();
   return (this.lastActive = { validateBeforeSave: false });
@@ -125,5 +128,30 @@ userSchema.methods.updateLastActive = function () {
 userSchema.virtual("totalEnrolledCouses").get(function () {
   return this.enrolledCourses.length;
 });
+
+//custom method for generating access token
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+      username: this.username,
+      fullName: this.fullName,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+  );
+};
+
+//custom method to generate refresh token 
+userSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+  );
+};
 
 export const User = mongoose.model("User", userSchema);
