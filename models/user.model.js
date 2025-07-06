@@ -109,7 +109,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 
 //get resetPassword Token
 userSchema.methods.getResetPasswordToken = function () {
-  const resetToken = crypto.randomBytes(20).toString("hex");
+  const resetToken = crypto.randomBytes(9).toString("hex");
   this.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)

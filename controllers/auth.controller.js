@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import crypto from "crypto";
 import fs from "fs";
 import {
   uploadOnCloudinary,
@@ -135,14 +136,12 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
-  if (!isPasswordValid) {
-    throw new ApiError(400, "incorrect password");
-  }
-
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id
   );
-
+  if (!isPasswordValid) {
+    throw new ApiError(400, "incorrect password");
+  }
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
@@ -262,10 +261,102 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
+const updatePassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    throw new ApiError(400, "old and new password are required ");
+  }
+
+  const user = await User.findById(req.user._id).select("+password +email");
+
+  const isPasswordCorrect = user.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(400, "Enter correct password");
+  }
+
+  user.password = newPassword;
+  user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ApiError(400, "email is required ");
+  }
+
+  const user = await User.findOne({ email });
+
+  //console.log("user in forgot password : " + user);
+
+  const forgotpasswordToken = user.getResetPasswordToken();
+
+  // console.log("forgotpasswordToken : " + forgotpasswordToken);
+
+  if (!forgotpasswordToken) {
+    throw new ApiError(500, "error while generating password reset token ");
+  }
+
+  user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        forgotpasswordToken,
+        "password reset link created successfully"
+      )
+    );
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword) {
+    throw new ApiError(400, "Both token and newPassword are required");
+  }
+
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordTokenExpire: { $gt: Date.now() },
+  }).select("+password +email");
+
+  if (!user) {
+    throw new ApiError(400, "token is not valid");
+  }
+
+ //console.log("User in resetPassword : " + user);
+
+  user.password = newPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordTokenExpire = undefined;
+
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "password reset successfully"));
+});
+
+const resetPasswordd = asyncHandler(async (req, res) => {});
+const resetPasswords = asyncHandler(async (req, res) => {});
+
 export {
   generateAccessAndRefreshToken,
   registerUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
+  updatePassword,
+  forgotPassword,
+  resetPassword,
 };
