@@ -7,8 +7,9 @@ import helmet from "helmet";
 import hpp from "hpp";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import mongoSanitize from "express-mongo-sanitize";
 import { ApiResponse } from "./utils/ApiResponse.js";
+//import mongoSanitize from "express-mongo-sanitize";
+
 
 dotenv.config();
 const app = express();
@@ -32,7 +33,7 @@ app.use(cookieParser());
 app.use("/api", limiter);
 app.use(helmet());
 app.use(hpp());
-app.use(mongoSanitize())
+//app.use(mongoSanitize())
 
 //cors configurations
 app.use(
@@ -86,6 +87,10 @@ app.use((err, req, res, next) => {
     );
 });
 
-// routes here
+// routes imports 
+import authRouter from "./routes/auth.routes.js"
+
+//routes
+app.use("/api/v1/auth", authRouter)
 
 export default app;

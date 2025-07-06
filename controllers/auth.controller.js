@@ -1,12 +1,13 @@
-import { User } from "../models/user.model";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import fs from "fs";
 import {
   uploadOnCloudinary,
   deleteMediaFromCloudinary,
   deleteVideoFromCloudinary,
-} from "../utills/cloudinary.js";
+} from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
@@ -259,6 +260,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     throw new ApiError(401, "something went wrong during refreshing token...");
   }
 });
+
+
 
 
 export {

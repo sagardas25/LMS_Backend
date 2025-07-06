@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { log } from "winston";
 
 const MAX_RETIES = 3;
 const RETRY_INTERVAL = 5000;
