@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { log } from "console";
 import fs from "fs";
 import dotenv from "dotenv";
+import chalk from "chalk";
 
 dotenv.config();
 
@@ -12,7 +13,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_CLOUD_SECRET, // Click 'View API Keys' above to copy your API secret
 });
 
-
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) return null;
@@ -21,12 +21,7 @@ const uploadOnCloudinary = async (localFilePath) => {
       resource_type: "auto",
     });
 
-    console.log("file uploaded on cloudinary , file url : " + response.url);
-
-    // const optimizedUrl = cloudinary.url(response.public_id, {
-    //   fetch_format: "auto",
-    //   quality: "auto",
-    // });
+    console.log(chalk.yellowBright("uploaded file url : " + response.url));
 
     fs.unlink(localFilePath, (err) => {
       if (err) {
@@ -52,7 +47,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 const deleteMediaFromCloudinary = async (public_id) => {
   try {
     const result = await cloudinary.uploader.destroy(public_id);
-    console.log("deletd from cloudinary , public id : " + public_id )
+    console.log("deletd from cloudinary , public id : " + public_id);
     return result;
   } catch (error) {
     console.log("error while deleting file from cloudinary : " + error);
@@ -61,8 +56,10 @@ const deleteMediaFromCloudinary = async (public_id) => {
 };
 const deleteVideoFromCloudinary = async (public_id) => {
   try {
-    const result = await cloudinary.uploader.destroy(public_id,{resource_type : "video"});
-    console.log("deletd from cloudinary , public id : " + public_id )
+    const result = await cloudinary.uploader.destroy(public_id, {
+      resource_type: "video",
+    });
+    console.log("deletd from cloudinary , public id : " + public_id);
     return result;
   } catch (error) {
     console.log("error while deleting file from cloudinary : " + error);
@@ -70,4 +67,8 @@ const deleteVideoFromCloudinary = async (public_id) => {
   }
 };
 
-export { uploadOnCloudinary, deleteMediaFromCloudinary ,deleteVideoFromCloudinary };
+export {
+  uploadOnCloudinary,
+  deleteMediaFromCloudinary,
+  deleteVideoFromCloudinary,
+};

@@ -5,8 +5,11 @@ import {asyncHandler} from "../utils/asyncHandler.js";
 
 const verifyJwt = asyncHandler(async (req, _, next) => {
   const token =
-    req.cookies.refreshToken ||
+    req.cookies.accessToken ||
     req.header("Authorization")?.replace("Bearer ", "");
+
+    console.log("token : " + token);
+    
 
   if (!token) {
     throw new ApiError(402, "unauthorized token");

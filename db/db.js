@@ -45,14 +45,14 @@ class DatabaseConnection {
         family: 4, // use IPv4
       };
 
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.MONGOOSE_DEBUG === "true") {
         mongoose.set("debug", true);
       }
 
       await mongoose.connect(process.env.MONGO_URL, connectionOptions);
       this.retryCount = 0; //reset retry count on success
     } catch (error) {
-      console.log(error.message);
+     // console.log( "error mesage :" + error.message);
       await this.handleConnError();
     }
   }
@@ -71,6 +71,7 @@ class DatabaseConnection {
 
       return this.connect();
     } else {
+      console.clear();
       console.log(`failed to connect after ${MAX_RETIES} attempts`);
     }
   }

@@ -8,7 +8,7 @@ dotenv.config();
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    fullName: {
       type: String,
       required: [true, "Name is requires"],
       trim: true,
@@ -122,7 +122,7 @@ userSchema.methods.getResetPasswordToken = function () {
 //getting last active
 userSchema.methods.updateLastActive = function () {
   this.lastActive = Date.now();
-  return (this.lastActive = { validateBeforeSave: false });
+  return this.save({ validateBeforeSave: false });
 };
 
 //virtual field for total enrolled courses
@@ -136,7 +136,6 @@ userSchema.methods.generateAccessToken = function () {
     {
       _id: this._id,
       email: this.email,
-      username: this.username,
       fullName: this.fullName,
     },
     process.env.ACCESS_TOKEN_SECRET,

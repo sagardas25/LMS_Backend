@@ -2,12 +2,11 @@ import dotenv from "dotenv";
 import { ApiResponse } from "./utils/ApiResponse.js";
 import app from "./app.js";
 import connectDB, { getDbStatus } from "./db/db.js";
+import chalk from "chalk";
 
 dotenv.config();
 
 const PORT = process.env.PORT;
-
-import authRouter from "./routes/auth.routes.js";
 
 // 404 handler - always stays at bottom
 app.use((req, res) => {
@@ -19,11 +18,17 @@ app.use((req, res) => {
 async function startServer() {
   try {
     await connectDB();
-    await getDbStatus();
+    const status = await getDbStatus();
+
+    //console.log(status);
+    console.log(chalk.blue("isConnected : " + status.isConnected));
+    console.log(chalk.blue("host : " + status.host));
 
     app.listen(PORT, () => {
       console.log(
-        `app is running at port : ${PORT} in ${process.env.NODE_ENV} mode`
+        chalk.magentaBright(
+          `app is running at port : ${PORT} in ${process.env.NODE_ENV} mode`
+        )
       );
     });
   } catch (error) {
@@ -33,4 +38,4 @@ async function startServer() {
   }
 }
 
-startServer()
+startServer();
