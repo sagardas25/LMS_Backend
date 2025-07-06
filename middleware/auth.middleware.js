@@ -1,9 +1,7 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model";
-import ApiError from "../utils/ApiError.js"
-import asyncHandler from "../utils/asyncHandler.js"
-
-
+import ApiError from "../utils/ApiError.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 export const verifyJwt = asyncHandler(async (req, _, next) => {
   const token =
@@ -23,7 +21,7 @@ export const verifyJwt = asyncHandler(async (req, _, next) => {
     );
 
     if (!user) {
-      throw new ApiError(402,"unauthorized user");
+      throw new ApiError(402, "unauthorized user");
     }
 
     req.user = user;

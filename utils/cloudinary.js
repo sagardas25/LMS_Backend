@@ -49,7 +49,6 @@ const uploadOnCloudinary = async (localFilePath) => {
     return null;
   }
 };
-
 const deleteMediaFromCloudinary = async (public_id) => {
   try {
     const result = await cloudinary.uploader.destroy(public_id);
