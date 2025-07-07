@@ -10,7 +10,6 @@ import cookieParser from "cookie-parser";
 import { ApiResponse } from "./utils/ApiResponse.js";
 //import mongoSanitize from "express-mongo-sanitize";
 
-
 dotenv.config();
 const app = express();
 
@@ -87,10 +86,12 @@ app.use((err, req, res, next) => {
     );
 });
 
-// routes imports 
-import authRouter from "./routes/auth.routes.js"
+// routes imports
+import authRouter from "./routes/auth.routes.js";
+import userRouter from "./routes/user.routes.js";
 
 //routes
-app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
 
 export default app;

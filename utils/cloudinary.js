@@ -34,7 +34,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 
     return response;
   } catch (error) {
-    console.log("error in cloudinary : " + error);
+    console.log("error in cloudinary(uploadOnCloudinary) : " + error);
 
     fs.unlink(localFilePath, (err) => {
       if (err) {
@@ -47,7 +47,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 const deleteMediaFromCloudinary = async (public_id) => {
   try {
     const result = await cloudinary.uploader.destroy(public_id);
-    console.log("deletd from cloudinary , public id : " + public_id);
+    console.log("deletd from cloudinary at deleteMediaFromCloudinary.public id : " + public_id);
     return result;
   } catch (error) {
     console.log("error while deleting file from cloudinary : " + error);
@@ -59,7 +59,7 @@ const deleteVideoFromCloudinary = async (public_id) => {
     const result = await cloudinary.uploader.destroy(public_id, {
       resource_type: "video",
     });
-    console.log("deletd from cloudinary , public id : " + public_id);
+    console.log("deletd from cloudinary deleteMediaFromCloudinary .public id : " + public_id);
     return result;
   } catch (error) {
     console.log("error while deleting file from cloudinary : " + error);
