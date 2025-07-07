@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { type } from "os";
 
 dotenv.config();
 
@@ -13,13 +14,15 @@ const userSchema = new mongoose.Schema(
       required: [true, "Name is requires"],
       trim: true,
       maxLength: [50, "Name cannot exceed 50 characters"],
+      minLength: [2, "Name must be at least 2 characters"],
+      match: [/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"],
     },
     email: {
       type: String,
       required: [true, "Email is requires"],
       trim: true,
       unique: true,
-      lowerCase: true,
+      lowercase: true,
       match: [
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         "Please enter a valid email address",
@@ -49,7 +52,12 @@ const userSchema = new mongoose.Schema(
 
     bio: {
       type: String,
-      maxLength: [200, "bio cannot exceed 50 characters"],
+      maxLength: [200, "bio cannot exceed 200 characters"],
+      minLength: [10, "Bio must be at least 10 characters"],
+      match: [
+        /^[a-zA-Z0-9\s.,'";:!?()-]{10,200}$/,
+        "Bio must be 10 to 200 characters and contain only letters, numbers, and punctuation",
+      ],
     },
 
     enrolledCourses: [
@@ -73,8 +81,14 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    resetPasswordToken: String,
-    resetPasswordTokenExpire: Date,
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordTokenExpire: {
+      type: Date,
+      select: false,
+    },
 
     refreshToken: {
       type: String,
