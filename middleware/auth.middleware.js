@@ -1,15 +1,14 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
-import {ApiError} from "../utils/ApiError.js";
-import {asyncHandler} from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const verifyJwt = asyncHandler(async (req, _, next) => {
   const token =
     req.cookies.accessToken ||
     req.header("Authorization")?.replace("Bearer ", "");
 
-    //console.log("token : " + token);
-    
+  //console.log("token : " + token);
 
   if (!token) {
     throw new ApiError(402, "unauthorized token");
@@ -34,4 +33,14 @@ const verifyJwt = asyncHandler(async (req, _, next) => {
   }
 });
 
-export { verifyJwt };
+
+const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!allowedRoles.includes(req.user.role)) {
+      throw new ApiError(403, `Access denied for role: ${req.user.role}`);
+    }
+    next();
+  };
+};
+
+export { verifyJwt, authorizeRoles };

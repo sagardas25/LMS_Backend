@@ -1,5 +1,4 @@
 import { Router } from "express";
-import {} from "../controllers/auth.controller.js";
 import { verifyJwt } from "../middleware/auth.middleware.js";
 import { upload } from "../utils/multer.js";
 import {

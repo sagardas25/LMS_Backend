@@ -89,9 +89,11 @@ app.use((err, req, res, next) => {
 // routes imports
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
+import adminDashboardRoute from "./routes/adminDashboard.routes.js"
 
 //routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/admin", adminDashboardRoute);
 
 export default app;

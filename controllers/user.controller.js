@@ -97,7 +97,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     );
   }
 });
-const getCurrernUserProfile2 = asyncHandler(async (req, res) => {});
-const getCurrernUserProfile3 = asyncHandler(async (req, res) => {});
+
+
 
 export { getCurrernUserProfile, updateUserProfile };

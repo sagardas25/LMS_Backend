@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { type } from "os";
+
 
 dotenv.config();
 
@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
 
     avatar: {
       type: String,
-      default: "default-avatar.png",
+      default: process.env.DEFAULT_AVATAR_URL,
     },
 
     bio: {

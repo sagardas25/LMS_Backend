@@ -64,9 +64,9 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "user with same  email already exists");
   }
 
-  if (!avatarLocalPath) {
-    throw new ApiError(409, "avatar file does not exist");
-  }
+  // if (!avatarLocalPath) {
+  //   throw new ApiError(409, "avatar file does not exist");
+  // }
 
   // uploading avatar and cover image from local server
   let avatar;
@@ -81,7 +81,7 @@ const registerUser = asyncHandler(async (req, res) => {
   try {
     const user = await User.create({
       fullName,
-      avatar: avatar?.url,
+      avatar: avatar?.url || undefined,
       email,
       password,
     });
