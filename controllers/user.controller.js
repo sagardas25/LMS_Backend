@@ -35,9 +35,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
   console.log("avatarLocalPath : " + avatarLocalPath);
 
-  if (!avatarLocalPath) {
-    throw new ApiError(409, "avatar file does not exist");
-  }
 
   let avatar;
   try {

@@ -20,6 +20,21 @@ const courseSchema = new mongoose.Schema(
     },
     category: {
       type: String,
+      enum: {
+        values: [
+          "Web Development",
+          "Mobile Development",
+          "Data Science",
+          "Programming Languages",
+          "Machine Learning",
+          "AI",
+          "UI/UX Design",
+          "Cybersecurity",
+          "Business",
+          "Other",
+        ],
+        message: "Please select a valid category",
+      },
       required: [true, "Course category is required"],
       trim: true,
     },
@@ -27,8 +42,8 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: [true, "Course description is required"],
       enum: {
-        vlues: ["beginner", "intermediate", "advanced"],
-        message: "Please seelct a valid level",
+        values: ["beginner", "intermediate", "advanced"],
+        message: "Please select a valid level",
       },
       default: "beginner",
     },
@@ -36,12 +51,14 @@ const courseSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: [true, "Course price is required"],
+      default : 0 , 
       min: [0, "course price must be non -ve "],
     },
 
     thumbnail: {
       type: String,
       required: [true, "Course thumbnail is required"],
+      default : "thumbnail/new.jpg",
     },
 
     enrolledStudents: [
@@ -51,16 +68,16 @@ const courseSchema = new mongoose.Schema(
       },
     ],
 
-    lectures: [
+    sections: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Lecture ",
+        ref: "Section",
       },
     ],
 
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User ",
+      ref: "User",
       required: [true, "Course instructor is required"],
     },
 
@@ -100,4 +117,4 @@ courseSchema.pre("save", function (next) {
   next();
 });
 
-export const Course = mongoose.model("Course", courseSchema)
+export const Course = mongoose.model("Course", courseSchema);

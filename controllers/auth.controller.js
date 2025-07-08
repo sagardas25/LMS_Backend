@@ -101,7 +101,7 @@ const registerUser = asyncHandler(async (req, res) => {
   } catch (error) {
     console.log("user creation failed , error : " + error);
 
-    console.log(avatar);
+   // console.log(avatar);
 
     // deleting the files from cloudinary in case of failed user creation
     // the files will be uploaded in case other failure in registraion
