@@ -101,7 +101,7 @@ const registerUser = asyncHandler(async (req, res) => {
   } catch (error) {
     console.log("user creation failed , error : " + error);
 
-   // console.log(avatar);
+    // console.log(avatar);
 
     // deleting the files from cloudinary in case of failed user creation
     // the files will be uploaded in case other failure in registraion
@@ -334,7 +334,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     throw new ApiError(400, "token is not valid");
   }
 
- //console.log("User in resetPassword : " + user);
+  //console.log("User in resetPassword : " + user);
 
   user.password = newPassword;
   user.resetPasswordToken = undefined;
