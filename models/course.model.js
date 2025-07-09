@@ -81,7 +81,7 @@ const courseSchema = new mongoose.Schema(
       max: 5,
       default: 0,
     },
-    totalRating: {
+    totalRatings: {
       type: Number,
       min: 0,
       default: 0,
@@ -116,10 +116,10 @@ const courseSchema = new mongoose.Schema(
   }
 );
 
-courseSchema.virtual("averageRating").get(function () {
-  return 0;
-  // implement later
-});
+// courseSchema.virtual("averageRating").get(function () {
+//   return 0;
+//   // implement later
+// });
 
 courseSchema.pre("save", function (next) {
   if (this.lectures) {

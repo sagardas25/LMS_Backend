@@ -4,7 +4,6 @@ import crypto from "crypto";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
-
 dotenv.config();
 
 const userSchema = new mongoose.Schema(
@@ -72,6 +71,7 @@ const userSchema = new mongoose.Schema(
           default: Date.now,
         },
       },
+
     ],
 
     createdCourse: [
@@ -140,8 +140,8 @@ userSchema.methods.updateLastActive = function () {
 };
 
 //virtual field for total enrolled courses
-userSchema.virtual("totalEnrolledCouses").get(function () {
-  return this.enrolledCourses.length;
+userSchema.virtual("totalEnrolledCourses").get(function () {
+  return (this.enrolledCourses?.length || 0);
 });
 
 //custom method for generating access token
