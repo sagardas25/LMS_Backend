@@ -192,13 +192,10 @@ const publishCourse = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, course, "course published succesfully"));
 });
-
 const updateCourseDetails = asyncHandler(async (req, res) => {
-
   const courseId = req.params.courseId;
   const { title, subtitle, description, price } = req.body;
 
-  
   if (!courseId || typeof courseId != "string") {
     throw new ApiError(400, "course id is required and must be type of string");
   }
@@ -257,7 +254,11 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
     return res
       .status(200)
       .json(
-        new ApiResponse(200, updatedCourse, "course details updated succesfully")
+        new ApiResponse(
+          200,
+          updatedCourse,
+          "course details updated succesfully"
+        )
       );
   } catch (error) {
     console.log("course updation failed , error : " + chalk.bgRedBright(error));
@@ -276,6 +277,18 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
     );
   }
 });
+
+// 1. controller to fetch course details for public view
+//     -->  wil do after adding sections and lectures (locking lecture for public )
+
+// 2. controller to search courses with auto suggetions
+
+// 3. delete course by instructor
+// note : Use a background job to handle media cleanup, not inside the main request thread
+// --> after adding lectures
+
+// 4. all courses list
+//   --> wil do after adding sections and lectures (locking lecture for public )
 
 export {
   createNewCourse,

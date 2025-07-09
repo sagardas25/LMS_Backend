@@ -36,6 +36,11 @@ router
   .post(verifyJwt, authorizeRoles("instructor"), publishCourse);
 router
   .route("/c/:courseId")
-  .patch(verifyJwt, authorizeRoles("instructor"),upload.single("thumbnail"), updateCourseDetails);
+  .patch(
+    verifyJwt,
+    authorizeRoles("instructor"),
+    upload.single("thumbnail"),
+    updateCourseDetails
+  );
 
 export default router;

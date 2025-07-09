@@ -51,14 +51,14 @@ const courseSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: [true, "Course price is required"],
-      default : 0 , 
+      default: 0,
       min: [0, "course price must be non -ve "],
     },
 
     thumbnail: {
       type: String,
       required: [true, "Course thumbnail is required"],
-      default : "thumbnail/new.jpg",
+      default: "thumbnail/new.jpg",
     },
 
     enrolledStudents: [
@@ -74,6 +74,18 @@ const courseSchema = new mongoose.Schema(
         ref: "Section",
       },
     ],
+
+    averageRating: {
+      type: Number,
+      min: 0,
+      max: 5,
+      default: 0,
+    },
+    totalRating: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
 
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
