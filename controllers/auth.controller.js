@@ -347,8 +347,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "password reset successfully"));
 });
 
-const resetPasswordd = asyncHandler(async (req, res) => {});
-const resetPasswords = asyncHandler(async (req, res) => {});
 
 export {
   generateAccessAndRefreshToken,

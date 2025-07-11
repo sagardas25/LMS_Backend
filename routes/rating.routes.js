@@ -13,6 +13,6 @@ const router = Router();
 router.route("/:courseId/submit-rating").post(verifyJwt, submitRating);
 router.route("/:courseId/update-rating").post(verifyJwt, updateRating);
 router.route("/:courseId/delete-rating").post(verifyJwt, deleteRating);
-router.route("/:courseId/get-all-ratings").get(verifyJwt , authorizeRoles("instructor", "Admin") , getAllRating)
+router.route("/:courseId/get-all-ratings").get(verifyJwt , authorizeRoles("instructor", "admin") , getAllRating)
 
 export default router;

@@ -211,7 +211,7 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
   }
 
   const thumbnailLocalPath = req.file?.path;
-  console.log("thumbnailLocalPath : " + thumbnailLocalPath);
+  //console.log("thumbnailLocalPath : " + thumbnailLocalPath);
 
   let thumbnail;
 

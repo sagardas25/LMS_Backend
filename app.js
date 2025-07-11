@@ -92,6 +92,7 @@ import userRouter from "./routes/user.routes.js";
 import adminDashboardRoute from "./routes/adminDashboard.routes.js";
 import courseRoute from "./routes/course.routes.js";
 import ratingRoute from "./routes/rating.routes.js";
+import sectionRoute from "./routes/section.routes.js"
 
 //routes
 app.use("/api/v1/auth", authRouter);
@@ -99,5 +100,6 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminDashboardRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/rating", ratingRoute);
+app.use("/api/v1/section", sectionRoute);
 
 export default app;
