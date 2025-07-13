@@ -93,8 +93,10 @@ import adminDashboardRoute from "./routes/adminDashboard.routes.js";
 import courseRoute from "./routes/course.routes.js";
 import ratingRoute from "./routes/rating.routes.js";
 import sectionRoute from "./routes/section.routes.js"
+import healthRoute from "./routes/healthCheck.routes.js"
 
 //routes
+app.use("/health",healthRoute );
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminDashboardRoute);

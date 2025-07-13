@@ -44,8 +44,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
 
-  //console.log('req.file : ' + req.file);
-  // console.log("avatarLocalPath : " + avatarLocalPath);
+  //console.log('req.file : ' , req.file);
+  // console.log("avatarLocalPath : " , avatarLocalPath);
 
   const existedUser = await User.findOne({ email });
 
@@ -56,7 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
     fs.unlink(avatarLocalPath, (err) => {
       if (err) {
         console.log(
-          "error in deleting avatar in case of existing avatar" + err
+          "error in deleting avatar in case of existing avatar : " , err
         );
       }
     });
@@ -74,7 +74,7 @@ const registerUser = asyncHandler(async (req, res) => {
     avatar = await uploadOnCloudinary(avatarLocalPath);
     // console.log("uploaded avatar on cloudinary", avatar);
   } catch (error) {
-    console.log("error in uploading avatar : " + error);
+    console.log("error in uploading avatar : " , error);
     throw new ApiError(500, "something went wrong during uploading avatar");
   }
 
@@ -99,7 +99,7 @@ const registerUser = asyncHandler(async (req, res) => {
       .status(201)
       .json(new ApiResponse(201, createdUser, "user registered succesfully"));
   } catch (error) {
-    console.log("user creation failed , error : " + error);
+    console.log("user creation failed , error : " , error);
 
     // console.log(avatar);
 
@@ -203,7 +203,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
 
-  //console.log("incomingRefreshToken : " + incomingRefreshToken);
+  //console.log("incomingRefreshToken : " , incomingRefreshToken);
 
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Refresh token is required...");
@@ -219,8 +219,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     // fetching user by the token
     const user = await User.findById(decodedToken?._id).select("+refreshToken");
 
-    //console.log("user : " + user);
-    //console.log("user token in db : " + user.refreshToken);
+    //console.log("user : " , user);
+    //console.log("user token in db : " , user.refreshToken);
 
     // user validation
     if (!user) {
@@ -293,11 +293,11 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  //console.log("user in forgot password : " + user);
+  //console.log("user in forgot password : " , user);
 
   const forgotpasswordToken = user.getResetPasswordToken();
 
-  // console.log("forgotpasswordToken : " + forgotpasswordToken);
+  // console.log("forgotpasswordToken : " , forgotpasswordToken);
 
   if (!forgotpasswordToken) {
     throw new ApiError(500, "error while generating password reset token ");
@@ -334,7 +334,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     throw new ApiError(400, "token is not valid");
   }
 
-  //console.log("User in resetPassword : " + user);
+  //console.log("User in resetPassword : " , user);
 
   user.password = newPassword;
   user.resetPasswordToken = undefined;

@@ -21,8 +21,8 @@ async function startServer() {
     const status = await getDbStatus();
 
     //console.log(status);
-    console.log(chalk.blue("isConnected : " + status.isConnected));
-    console.log(chalk.blue("host : " + status.host));
+    console.log(chalk.blue("isConnected : " , status.isConnected));
+    console.log(chalk.blue("host : " , status.host));
 
     app.listen(PORT, () => {
       console.log(
@@ -32,7 +32,7 @@ async function startServer() {
       );
     });
   } catch (error) {
-    console.log("db connection error : " + error);
+    console.log("db connection error : " , error);
 
     process.exit(1);
   }
