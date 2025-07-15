@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { Section } from "./section.model.js";
 const lectureSchema = new mongoose.Schema(
   {
     title: {
@@ -21,9 +21,7 @@ const lectureSchema = new mongoose.Schema(
     },
     notesUrl: {
       type: String,
-      required: [true, "Notes url is required"],
     },
-
     duration: {
       type: Number,
       default: 0,
@@ -42,6 +40,12 @@ const lectureSchema = new mongoose.Schema(
     order: {
       type: Number,
       required: [true, "Lecture order is required"],
+    },
+
+    section: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Section",
+      required: true,
     },
   },
 

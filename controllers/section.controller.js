@@ -121,11 +121,7 @@ const deleteSection = asyncHandler(async (req, res) => {
 
 });
 
-// POST /sections/:sectionId/lectures
-const addLectureToSection = asyncHandler(async (req, res) => {});
 
-// DELETE /sections/:sectionId/lectures/:lectureId
-const removeLectureFromSection = asyncHandler(async (req, res) => {});
 
 export {
   createSection,

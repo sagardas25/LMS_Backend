@@ -12,12 +12,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_CLOUD_SECRET, // Click 'View API Keys' above to copy your API secret
 });
 
-const uploadOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (localFilePath , resourceType = "auto") => {
   try {
     if (!localFilePath) return null;
 
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
+      resource_type: resourceType,
     });
 
     console.log(chalk.yellowBright("uploaded file url : " , response.url));

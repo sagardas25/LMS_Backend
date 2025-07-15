@@ -26,7 +26,7 @@ const createNewCourse = asyncHandler(async (req, res) => {
   }
 
   const thumbnailLocalPath = req.file.path;
-  console.log("thumbnailLocalPath : " , thumbnailLocalPath);
+  console.log("thumbnailLocalPath : ", thumbnailLocalPath);
 
   let thumbnail;
 
@@ -34,7 +34,7 @@ const createNewCourse = asyncHandler(async (req, res) => {
     thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
     console.log(chalk.greenBright("uploaded thumbnail on cloudinary"));
   } catch (error) {
-    console.log("error in uploading thumbnail : " , chalk.bgRedBright(error));
+    console.log("error in uploading thumbnail : ", chalk.bgRedBright(error));
     throw new ApiError(500, "something went wrong during uploading avatar");
   }
 
@@ -59,7 +59,7 @@ const createNewCourse = asyncHandler(async (req, res) => {
     });
 
     console.log(
-      chalk.redBright("thumbnail of newCourse : " , newCourse.thumbnail)
+      chalk.redBright("thumbnail of newCourse : ", newCourse.thumbnail)
     );
 
     if (!newCourse) {
@@ -219,7 +219,7 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
     thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
     console.log(chalk.greenBright("uploaded thumbnail on cloudinary"));
   } catch (error) {
-    console.log("error in uploading thumbnail : " , chalk.bgRedBright(error));
+    console.log("error in uploading thumbnail : ", chalk.bgRedBright(error));
     throw new ApiError(500, "something went wrong during uploading avatar");
   }
 
@@ -261,7 +261,7 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    console.log("course updation failed , error : " , chalk.bgRedBright(error));
+    console.log("course updation failed , error : ", chalk.bgRedBright(error));
 
     // console.log(thumbnail);
 
@@ -285,10 +285,11 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
 
 // 3. delete course by instructor
 // note : Use a background job to handle media cleanup, not inside the main request thread
+// note : needs redis bull setup
 // --> after adding lectures
 
 // 4. all courses list
-//   --> wil do after adding sections and lectures (locking lecture for public )
+//   --> wil do after adding sections and lectures (locking lecture for public)
 
 export {
   createNewCourse,

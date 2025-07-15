@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "path";
 
 
-// Ensure './public/temp' exists manually before using this
+// Ensure '/public/temp' exists manually before using this
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './public/temp')
