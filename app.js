@@ -94,6 +94,7 @@ import courseRoute from "./routes/course.routes.js";
 import ratingRoute from "./routes/rating.routes.js";
 import sectionRoute from "./routes/section.routes.js"
 import healthRoute from "./routes/healthCheck.routes.js"
+import razorpayRoute from "./routes/razorpay.routes.js"
 
 //routes
 app.use("/health",healthRoute );
@@ -103,5 +104,6 @@ app.use("/api/v1/admin", adminDashboardRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/rating", ratingRoute);
 app.use("/api/v1/section", sectionRoute);
+app.use("/api/v1/razorpay", razorpayRoute);
 
 export default app;

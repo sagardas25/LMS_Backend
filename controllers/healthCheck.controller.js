@@ -6,7 +6,7 @@ import { ApiError } from "../utils/ApiError.js";
 export const healthCheck = asyncHandler((req, res) => {
   try {
     const dbStatus = getDbStatus();
-    console.log("db status : ", dbStatus);
+    //console.log("db status : ", dbStatus);
 
     const healthStatus = {
       status: "OK",
@@ -22,8 +22,8 @@ export const healthCheck = asyncHandler((req, res) => {
 
         server: {
           status: "healthy",
-          uptime: process.uptime() + " seconds",
-          memoryUsage: process.memoryUsage(),
+          uptime: process.uptime().toFixed(2) + " seconds",
+          //memoryUsage: process.memoryUsage(),
         },
       },
     };
@@ -31,7 +31,7 @@ export const healthCheck = asyncHandler((req, res) => {
     const httpStatus =
       healthStatus.services.database.status === "healthy db" ? 200 : 503;
 
-    console.log("http status : ", httpStatus);
+   // console.log("http status : ", httpStatus);
 
     return res
       .status(httpStatus)

@@ -26,7 +26,7 @@ const createNewCourse = asyncHandler(async (req, res) => {
   }
 
   const thumbnailLocalPath = req.file.path;
-  console.log("thumbnailLocalPath : " + thumbnailLocalPath);
+  console.log("thumbnailLocalPath : " , thumbnailLocalPath);
 
   let thumbnail;
 
@@ -34,7 +34,7 @@ const createNewCourse = asyncHandler(async (req, res) => {
     thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
     console.log(chalk.greenBright("uploaded thumbnail on cloudinary"));
   } catch (error) {
-    console.log("error in uploading thumbnail : " + chalk.bgRedBright(error));
+    console.log("error in uploading thumbnail : " , chalk.bgRedBright(error));
     throw new ApiError(500, "something went wrong during uploading avatar");
   }
 
@@ -59,7 +59,7 @@ const createNewCourse = asyncHandler(async (req, res) => {
     });
 
     console.log(
-      chalk.redBright("thumbnail of newCourse : " + newCourse.thumbnail)
+      chalk.redBright("thumbnail of newCourse : " , newCourse.thumbnail)
     );
 
     if (!newCourse) {
@@ -97,7 +97,7 @@ const getMyCreatedCourses = asyncHandler(async (req, res) => {
     "createdCourse"
   );
 
-  // console.log("instructor : " + chalk.magentaBright(instructor));
+  // console.log("instructor : " , chalk.magentaBright(instructor));
 
   if (!instructor) {
     throw new ApiError(200, "instructor not found");
@@ -123,7 +123,7 @@ const getAllPublishedCourse = asyncHandler(async (req, res) => {
     match: { isPublished: true },
   });
 
-  // console.log("instructor : " + chalk.magentaBright(instructor));
+  // console.log("instructor : " , chalk.magentaBright(instructor));
 
   if (!instructor) {
     throw new ApiError(200, "instructor not found");
@@ -153,7 +153,7 @@ const getAllUnpublishedCourse = asyncHandler(async (req, res) => {
     match: { isPublished: false },
   });
 
-  // console.log("instructor : " + chalk.magentaBright(instructor));
+  // console.log("instructor : " , chalk.magentaBright(instructor));
 
   if (!instructor) {
     throw new ApiError(200, "instructor not found");
@@ -211,7 +211,7 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
   }
 
   const thumbnailLocalPath = req.file?.path;
-  //console.log("thumbnailLocalPath : " + thumbnailLocalPath);
+  //console.log("thumbnailLocalPath : " , thumbnailLocalPath);
 
   let thumbnail;
 
@@ -219,7 +219,7 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
     thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
     console.log(chalk.greenBright("uploaded thumbnail on cloudinary"));
   } catch (error) {
-    console.log("error in uploading thumbnail : " + chalk.bgRedBright(error));
+    console.log("error in uploading thumbnail : " , chalk.bgRedBright(error));
     throw new ApiError(500, "something went wrong during uploading avatar");
   }
 
@@ -261,7 +261,7 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    console.log("course updation failed , error : " + chalk.bgRedBright(error));
+    console.log("course updation failed , error : " , chalk.bgRedBright(error));
 
     // console.log(thumbnail);
 

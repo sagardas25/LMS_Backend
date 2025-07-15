@@ -9,8 +9,8 @@ const createSection = asyncHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const { title } = req.body;
 
-  // console.log("courseID : " + courseId);
-  // console.log("title : " + title);
+  // console.log("courseID : " , courseId);
+  // console.log("title : " , title);
 
   if (!title || !courseId) {
     throw new ApiError(500, "course id and section title required");
@@ -25,12 +25,12 @@ const createSection = asyncHandler(async (req, res) => {
     throw new ApiError(500, "error occured during creating section");
   }
 
-  // console.log("section : " + chalk.green(section));
-  // console.log("section id : " + chalk.yellow(section?._id));
+  // ,.log("section : " , chalk.green(section));
+  // console.log("section id : " , chalk.yellow(section?._id));
 
   const course = await Course.findById(courseId);
 
-  // console.log("course : " + course);
+  // console.log("course : " , course);
 
   if (!course) {
     throw new ApiError(500, "error occured during fetching course");
@@ -63,7 +63,7 @@ const getAllSectionsForCourse = asyncHandler(async (req, res) => {
     );
   }
 
-  // console.log("all-sections : " + chalk.yellow(allSections));
+  // console.log("all-sections : " , chalk.yellow(allSections));
 
   return res
     .status(200)

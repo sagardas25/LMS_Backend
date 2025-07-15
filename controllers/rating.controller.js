@@ -46,9 +46,9 @@ const submitRating = asyncHandler(async (req, res) => {
     throw new ApiError(500, "cannot find courseId");
   }
 
-  // console.log(chalk.yellow("studentId : " + studentId));
-  // console.log(chalk.yellow("review : " + req.body.review));
-  // console.log(chalk.yellow("courseId : " + courseId));
+  // ,.log(chalk.yellow("studentId : " , studentId));
+  // console.log(chalk.yellow("review : " , req.body.review));
+  // console.log(chalk.yellow("courseId : " , courseId));
 
   
   const existingReview = await Rating.findOne({
@@ -67,7 +67,7 @@ const submitRating = asyncHandler(async (req, res) => {
     review,
   });
 
-  //console.log(chalk.yellowBright("new Rating : " + newRating));
+  //console.log(chalk.yellowBright("new Rating : " , newRating));
 
   if (!newRating) {
     throw new ApiError(500, "something went wrong while adding review");
@@ -152,13 +152,13 @@ const deleteRating = asyncHandler(async (req, res) => {
 const getAllRating = asyncHandler(async (req, res) => {
   const { courseId } = req.params;
 
-  //console.log("courseId : " + courseId);
+  //console.log("courseId : " , courseId);
 
   const reviews = await Rating.find({ course: courseId })
     .populate({ path: "student", select: "fullName avatar" })
     .sort({ createdAt: -1 });
 
-  //console.log("review : " + reviews);
+  //console.log("review : " , reviews);
 
   const course = await Course.findById(courseId).select(
     "averageRating totalRatings"

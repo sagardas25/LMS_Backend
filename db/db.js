@@ -52,7 +52,7 @@ class DatabaseConnection {
       await mongoose.connect(process.env.MONGO_URL, connectionOptions);
       this.retryCount = 0; //reset retry count on success
     } catch (error) {
-     // console.log( "error mesage :" + error.message);
+     // console.log( "error mesage :" , error.message);
       await this.handleConnError();
     }
   }

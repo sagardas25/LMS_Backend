@@ -21,13 +21,14 @@ async function startServer() {
     const status = await getDbStatus();
 
     //console.log(status);
-    console.log(chalk.blue("isConnected : " , status.isConnected));
-    console.log(chalk.blue("host : " , status.host));
+    console.log(chalk.redBright("isConnected : " ) , chalk.blueBright(status.isConnected) );
+    console.log(chalk.redBright("host : " ) , chalk.blueBright(status.host) );
+    console.log(chalk.redBright("health-check : " ) , chalk.blueBright("http://localhost:8050/health") );
 
     app.listen(PORT, () => {
       console.log(
-        chalk.magentaBright(
-          `app is running at port : ${PORT} in ${process.env.NODE_ENV} mode`
+        chalk.yellowBright(
+          `app is running at port ${PORT} in ${process.env.NODE_ENV} mode`
         )
       );
     });
