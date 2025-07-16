@@ -11,7 +11,6 @@ import {
 import { Section } from "../models/section.model.js";
 import { Lecture } from "../models/lecture.model.js";
 
-// POST /sections/:sectionId/lectures
 const addLectureToSection = asyncHandler(async (req, res) => {
   const sectionId = req.params.sectionId;
   const { title, description, isPreview } = req.body;
@@ -35,8 +34,8 @@ const addLectureToSection = asyncHandler(async (req, res) => {
 
   if (!videopath) throw new ApiError(400, "Video file is required");
 
-  // const videoUpload = await uploadOnCloudinary(videopath, "video");
-  // const notesUpload = await uploadOnCloudinary(notesPath, "raw");
+  const videoUpload = await uploadOnCloudinary(videopath, "video");
+  const notesUpload = await uploadOnCloudinary(notesPath, "raw");
 
   console.log(
     chalk.redBright("notesUpload : ") +
@@ -99,9 +98,127 @@ const addLectureToSection = asyncHandler(async (req, res) => {
   }
 });
 
-// DELETE /sections/:sectionId/lectures/:lectureId
-const removeLectureFromSection = asyncHandler(async (req, res) => {});
+const removeLectureFromSection = asyncHandler(async (req, res) => {
+  const { sectionId, lectureId } = req.params;
 
-// bulk delete video -- > needs redis bull setup
+  const lecture = await Lecture.findById(lectureId);
 
-export { addLectureToSection, removeLectureFromSection };
+  if (!lecture) {
+    throw new ApiError(400, "cannot find lecture ");
+  }
+
+  const section = await Section.findById(sectionId);
+
+  if (!section) {
+    throw new ApiError(400, "cannot find section ");
+  }
+
+  // decouple lecture from section
+  section.lectures.pull(lectureId);
+  await section.save();
+
+  // deleteing video from cloudinary
+  await deleteVideoFromCloudinary(lecture.publicId);
+
+  // deleteing lecture record from db
+  await Lecture.findByIdAndDelete(lectureId);
+
+  return res
+    .status(204)
+    .json(new ApiResponse(204, "lecture deleted succesfully"));
+});
+
+const updateLectureMetadata = asyncHandler(async (req, res) => {
+  const lectureId = req.params.lectureId;
+
+  console.log("lecture id : ", lectureId);
+
+  const { title, description } = req.body;
+
+  if (!title || !description) {
+    throw new ApiError(400, "title and description needed");
+  }
+
+  try {
+    const updatedData = {};
+
+    if (title) updatedData.title = title;
+    if (description) updatedData.description = description;
+
+    console.log("updated data : ", updatedData);
+
+    const updatedLecture = await Lecture.findByIdAndUpdate(
+      lectureId,
+      updatedData,
+      {
+        new: true,
+      }
+    );
+    console.log("updated lecture : ", updatedLecture);
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          updatedLecture,
+          "lecture metadata updated succesfully"
+        )
+      );
+  } catch (error) {
+    console.log("error while updating lecture : ", error);
+
+    return res
+      .status(200)
+      .json(new ApiError(500, "error while updating lecture"));
+  }
+});
+const getSingleLecture = asyncHandler(async (req, res) => {
+  const lectureId = req.params.lectureId;
+  console.log("lecture id : ", lectureId);
+
+  const lecture = await Lecture.findById(lectureId);
+
+  //console.log("lecture details : ", lecture);
+
+  if (!lecture) {
+    throw new ApiError(500, "erroe while finding lecture");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, lecture, "fetched lecture succesfully"));
+});
+
+const toggleLecturePreview = asyncHandler(async (req, res) => {
+  const lectureId = req.params.lectureId;
+
+  const lecture = await Lecture.findById(lectureId);
+  if (!lecture) throw new ApiError(404, "Lecture not found");
+
+  lecture.isPreview = !lecture.isPreview;
+  await lecture.save();
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { "lecture.isPreview : ": lecture.isPreview },
+        "lecture preview changed succesfully"
+      )
+    );
+});
+
+export {
+  addLectureToSection,
+  removeLectureFromSection,
+  updateLectureMetadata,
+  getSingleLecture,
+  toggleLecturePreview,
+};
+
+// IMPLEMENT LATER
+// 1. bulk delete video in section -- > needs redis bull setup
+// 2. Move Lecture to Another Section
+// 3. reorder lectures within section

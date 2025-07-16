@@ -6,6 +6,7 @@ import {
   deleteSection,
   getAllSectionsForCourse,
   updateSectionTitle,
+  getLectureInSection,
 } from "../controllers/section.controller.js";
 
 const router = Router();
@@ -26,5 +27,9 @@ router
 router
   .route("/:sectionId/delete-section")
   .post(verifyJwt, authorizeRoles("instructor", "admin"), deleteSection);
+
+router
+  .route("/:sectionId/get-all-lectures")
+  .post(verifyJwt, getLectureInSection);
 
 export default router;

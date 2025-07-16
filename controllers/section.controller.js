@@ -121,11 +121,28 @@ const deleteSection = asyncHandler(async (req, res) => {
 
 });
 
+const getLectureInSection = asyncHandler(async (req, res) => {
+  const sectionId = req.params.sectionId;
 
+  const section = await Section.findById(sectionId).populate("lectures");
+
+  const lecture = section.lectures
+
+  if (!section) {
+    throw new ApiError(500, "Lectures not found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, lecture, "fetched all the lectures succesfully")
+    );
+});
 
 export {
   createSection,
   getAllSectionsForCourse,
   updateSectionTitle,
   deleteSection,
+  getLectureInSection
 };

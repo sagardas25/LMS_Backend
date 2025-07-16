@@ -278,18 +278,6 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
   }
 });
 
-// 1. controller to fetch course details for public view
-//     -->  wil do after adding sections and lectures (locking lecture for public )
-
-// 2. controller to search courses with auto suggetions
-
-// 3. delete course by instructor
-// note : Use a background job to handle media cleanup, not inside the main request thread
-// note : needs redis bull setup
-// --> after adding lectures
-
-// 4. all courses list
-//   --> wil do after adding sections and lectures (locking lecture for public)
 
 export {
   createNewCourse,
@@ -299,3 +287,11 @@ export {
   getAllUnpublishedCourse,
   updateCourseDetails,
 };
+
+
+
+// IMPLEMENT LATER
+// 1. controller to fetch course details for public view --> locking lecture for public
+// 2. controller to search courses with auto suggetions
+// 4. all courses list --> locking lecture for public
+// 3. delete course by instructor --> requires bull redis setup for different delete queue
