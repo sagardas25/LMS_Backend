@@ -278,6 +278,105 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
   }
 });
 
+const getStudentCourseDetails = asyncHandler(async (req, res) => {
+  const courseId = req.params.courseId;
+  const userId = req.user?._id;
+
+  const course = await Course.findById(courseId)
+    .populate({
+      path: "instructor",
+      select: "name email avatar",
+    })
+
+    .populate({
+      path: "sections",
+      populate: {
+        path: "lectures",
+        select:
+          "title description duration order isPreview videoUrl notesUrl totalLectures totalLectures",
+        options: { sort: { order: 1 } },
+      },
+      options: { sort: { order: 1 } },
+    });
+
+  if (!course) {
+    throw new ApiError(400, "course not found ");
+  }
+
+  const isEnrolled = course.enrolledStudents.some(
+    (studentId) => studentId.toString() === userId.toString()
+  );
+
+  const processedSection = course.sections.map((section) => {
+    const processedLecture = section.lectures.map((lecture) => {
+      return {
+        _id: lecture._id,
+        title: lecture.title,
+        description: lecture.description,
+        duration: lecture.duration,
+        order: lecture.order,
+        isPreview: lecture.isPreview,
+        notesUrl: isEnrolled || lecture.isPreview ? lecture.notesUrl : null,
+        videoUrl: isEnrolled || lecture.isPreview ? lecture.videoUrl : null,
+      };
+    });
+
+    return {
+      _id: section._id,
+      title: section.title,
+      order: section.order,
+      lectures: processedLecture,
+      totalLectures: section.lectures?.length,
+      totalDuration: section.totalDuration,
+    };
+  });
+
+  const finalData = {
+    _id: course._id,
+    title: course.title,
+    subtitle: course.subtitle,
+    description: course.description,
+    thumbnail: course.thumbnail,
+    category: course.category,
+    level: course.level,
+    price: course.price,
+    averageRating: course.averageRating,
+    totalRatings: course.totalRatings,
+    instructor: course.instructor,
+    totalLectures: course.totalLectures,
+    totalDuration: course.totalDuration,
+    isEnrolled,
+    sections: processedSection,
+  };
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, finalData, "lecture fetched succesfully"));
+});
+
+const searchCourses = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim() === "") {
+    return new ApiError(400, "Search query is required");
+  }
+
+  const suggestions = await Course.find({
+    $or: [
+      { title: { $regex: q, $options: "i" } },
+      { subtitle: { $regex: q, $options: "i" } },
+      { category: { $regex: q, $options: "i" } },
+    ],
+
+    isPublished: true,
+  })
+    .select("title _id thumbnail")
+    .limit(10);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, suggestions, "Course suggestions fetched"));
+});
 
 export {
   createNewCourse,
@@ -286,12 +385,11 @@ export {
   getAllPublishedCourse,
   getAllUnpublishedCourse,
   updateCourseDetails,
+  getStudentCourseDetails,
+  searchCourses,
 };
 
-
-
 // IMPLEMENT LATER
-// 1. controller to fetch course details for public view --> locking lecture for public
 // 2. controller to search courses with auto suggetions
 // 4. all courses list --> locking lecture for public
 // 3. delete course by instructor --> requires bull redis setup for different delete queue

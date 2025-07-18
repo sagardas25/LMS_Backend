@@ -7,7 +7,9 @@ import {
   getAllUnpublishedCourse,
   getMyCreatedCourses,
   publishCourse,
+  getStudentCourseDetails,
   updateCourseDetails,
+  searchCourses,
 } from "../controllers/course.controller.js";
 
 const router = Router();
@@ -41,6 +43,9 @@ router
     authorizeRoles("instructor"),
     upload.single("thumbnail"),
     updateCourseDetails
-  );
+  )
+  .get(verifyJwt, getStudentCourseDetails);
+
+router.route("/search").get(searchCourses);
 
 export default router;

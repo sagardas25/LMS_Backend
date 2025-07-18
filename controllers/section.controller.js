@@ -111,6 +111,7 @@ const updateSectionTitle = asyncHandler(async (req, res) => {
 });
 
 // DELETE /sections/:sectionId
+//update it to delte lectures as well
 const deleteSection = asyncHandler(async (req, res) => {
 
   const sectionId = req.params.sectionId;

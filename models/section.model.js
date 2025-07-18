@@ -22,11 +22,36 @@ const sectionSchema = new mongoose.Schema(
       ref: "Course",
       required: true,
     },
+
+    totalDuration: {
+      type: Number,
+      default: 0,
+    },
+
+    totalLectures: {
+      type: Number,
+      default: 0,
+    },
   },
 
   {
     timestamps: true,
   }
 );
+
+sectionSchema.pre("save", function (next) {
+  if (this.lectures) {
+    this.totalLectures = this.lectures.length;
+  }
+
+  let totalDuration = 0;
+
+  for (const lecture of this.lectures) {
+    totalDuration += lecture.duration;
+  }
+  this.totalDuration = totalDuration;
+
+  next();
+});
 
 export const Section = mongoose.model("Section", sectionSchema);

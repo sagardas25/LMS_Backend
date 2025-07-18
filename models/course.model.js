@@ -116,15 +116,19 @@ const courseSchema = new mongoose.Schema(
   }
 );
 
-// courseSchema.virtual("averageRating").get(function () {
-//   return 0;
-//   // implement later
-// });
 
 courseSchema.pre("save", function (next) {
-  if (this.lectures) {
-    this.totalLectures = this.lectures.length;
+
+  if (this.section.lectures) {
+    this.totalLectures = this.section.lectures.length;
   }
+
+  let totalDuration = 0;
+
+  for (const lecture of this.lectures) {
+    totalDuration += lecture.duration;
+  }
+  this.totalDuration = totalDuration;
 
   next();
 });
