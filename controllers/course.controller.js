@@ -370,8 +370,11 @@ const searchCourses = asyncHandler(async (req, res) => {
 
     isPublished: true,
   })
-    .select("title _id thumbnail")
-    .limit(10);
+    .select(
+      "title description category level price averageRating totalRating _id thumbnail"
+    )
+    .limit(10)
+    .populate({ path: "instructor", select: "fullName email avatar" });
 
   res
     .status(200)
