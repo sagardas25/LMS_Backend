@@ -9,6 +9,38 @@ import {
   deleteVideoFromCloudinary,
 } from "../utils/cloudinary.js";
 import { Course } from "../models/course.model.js";
+import { populate } from "dotenv";
+import { updateSectionStats } from "./section.controller.js";
+
+export const updateCourseStats = async (courseId) => {
+  const course = await Course.findById(courseId).populate({
+    path: "sections",
+    populate: {
+      path: "lectures",
+    },
+  });
+
+  let totalLectures = 0;
+  let totalDuration = 0;
+
+  //loop through each section
+  for (const section of course.sections) {
+    // adding number of lectures in each section
+    totalLectures += section.lectures.length;
+
+    //sum durations of lectures in section
+
+    totalDuration += section.lectures.reduce(
+      (sum, lecture) => sum + (lecture.duration || 0),
+      0
+    );
+  }
+
+  (course.totalDuration = totalDuration),
+    (course.totalLectures = totalLectures);
+
+  await course.save();
+};
 
 const createNewCourse = asyncHandler(async (req, res) => {
   const { title, subtitle, description, category, level, price } = req.body;
@@ -321,6 +353,8 @@ const getStudentCourseDetails = asyncHandler(async (req, res) => {
       };
     });
 
+   updateSectionStats(section._id);
+
     return {
       _id: section._id,
       title: section.title,
@@ -330,6 +364,8 @@ const getStudentCourseDetails = asyncHandler(async (req, res) => {
       totalDuration: section.totalDuration,
     };
   });
+
+  await updateCourseStats(courseId);
 
   const finalData = {
     _id: course._id,
@@ -381,6 +417,30 @@ const searchCourses = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, suggestions, "Course suggestions fetched"));
 });
 
+const getCoursesByCategory = asyncHandler(async (req, res) => {
+  const { category } = req.query;
+
+  const filter = { isPublished: true };
+
+  if (category && category.toLowerCase() !== "all") {
+    filter.category = category;
+  }
+
+  const courses = await Course.find(filter)
+    .select(
+      "title description category price level averageRating totalRating thumbnail _id"
+    )
+    .populate({
+      path: "instructor",
+      select: "fullName avatar",
+    })
+    .sort({ createdAt: -1 });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, courses, "Courses fetched by category"));
+});
+
 export {
   createNewCourse,
   getMyCreatedCourses,
@@ -390,9 +450,8 @@ export {
   updateCourseDetails,
   getStudentCourseDetails,
   searchCourses,
+  getCoursesByCategory,
 };
 
 // IMPLEMENT LATER
-// 2. controller to search courses with auto suggetions
-// 4. all courses list --> locking lecture for public
-// 3. delete course by instructor --> requires bull redis setup for different delete queue
+// 1. delete course by instructor --> requires bull redis setup for different delete queue

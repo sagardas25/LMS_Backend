@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { updateCourseStats } from "../controllers/course.controller.js";
 
 const sectionSchema = new mongoose.Schema(
   {
@@ -39,19 +40,18 @@ const sectionSchema = new mongoose.Schema(
   }
 );
 
-sectionSchema.pre("save", function (next) {
-  if (this.lectures) {
-    this.totalLectures = this.lectures.length;
+// Run after adding a section
+sectionSchema.post("save", async function () {
+  if (this.course) {
+    await updateCourseStats(this.course);
   }
+});
 
-  let totalDuration = 0;
-
-  for (const lecture of this.lectures) {
-    totalDuration += lecture.duration;
+// Run after deleting a section
+sectionSchema.post("remove", async function () {
+  if (this.course) {
+    await updateCourseStats(this.course);
   }
-  this.totalDuration = totalDuration;
-
-  next();
 });
 
 export const Section = mongoose.model("Section", sectionSchema);

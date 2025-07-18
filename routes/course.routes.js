@@ -10,6 +10,7 @@ import {
   getStudentCourseDetails,
   updateCourseDetails,
   searchCourses,
+  getCoursesByCategory
 } from "../controllers/course.controller.js";
 
 const router = Router();
@@ -47,5 +48,7 @@ router
   .get(verifyJwt, getStudentCourseDetails);
 
 router.route("/search").get(searchCourses);
+
+router.route("/course-by-category").get(getCoursesByCategory)
 
 export default router;

@@ -5,6 +5,22 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+export const updateSectionStats = async (sectionId) => {
+  const section = await Section.findById(sectionId).populate("lectures");
+
+  let totalDuration = 0;
+
+  totalDuration = section.lectures.reduce(
+    (sum, lecture) => sum + (lecture.duration || 0),
+    0
+  );
+
+  (section.totalDuration = totalDuration),
+    (section.totalLectures = section.lectures.length);
+
+  await section.save();
+};
+
 const createSection = asyncHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const { title } = req.body;
@@ -53,7 +69,7 @@ const getAllSectionsForCourse = asyncHandler(async (req, res) => {
   if (!course) {
     throw new ApiError(404, "Course not found");
   }
-
+  
   const allSections = course.sections;
 
   if (!allSections) {
@@ -113,13 +129,13 @@ const updateSectionTitle = asyncHandler(async (req, res) => {
 // DELETE /sections/:sectionId
 //update it to delte lectures as well
 const deleteSection = asyncHandler(async (req, res) => {
-
   const sectionId = req.params.sectionId;
 
-  await Section.findByIdAndDelete(sectionId)
+  await Section.findByIdAndDelete(sectionId);
 
-  return res.status(200).json(new ApiResponse(200,{} , "section deleted succesfully"))
-
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "section deleted succesfully"));
 });
 
 const getLectureInSection = asyncHandler(async (req, res) => {
@@ -127,7 +143,7 @@ const getLectureInSection = asyncHandler(async (req, res) => {
 
   const section = await Section.findById(sectionId).populate("lectures");
 
-  const lecture = section.lectures
+  const lecture = section.lectures;
 
   if (!section) {
     throw new ApiError(500, "Lectures not found");
@@ -145,5 +161,5 @@ export {
   getAllSectionsForCourse,
   updateSectionTitle,
   deleteSection,
-  getLectureInSection
+  getLectureInSection,
 };

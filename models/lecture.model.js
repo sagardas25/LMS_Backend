@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { Section } from "./section.model.js";
+import { updateCourseStats } from "../controllers/course.controller.js";
+import { updateSectionStats } from "../controllers/section.controller.js";
 const lectureSchema = new mongoose.Schema(
   {
     title: {
@@ -55,5 +57,23 @@ const lectureSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+lectureSchema.post("save", async function () {
+  const section = await Section.findById(this.section);
+  if (section) {
+    await updateSectionStats(section._id);
+    await updateCourseStats(section.course);
+  }
+});
+
+lectureSchema.post("remove", async function () {
+  const section = await Section.findById(this.section);
+  if (section) {
+    await updateSectionStats(section._id);
+    await updateCourseStats(section.course);
+  }
+});
+
+
 
 export const Lecture = mongoose.model("Lecture", lectureSchema);

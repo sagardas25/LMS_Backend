@@ -117,20 +117,20 @@ const courseSchema = new mongoose.Schema(
 );
 
 
-courseSchema.pre("save", function (next) {
+// courseSchema.pre("save", function (next) {
 
-  if (this.section.lectures) {
-    this.totalLectures = this.section.lectures.length;
-  }
+//   if (this.section.lectures) {
+//     this.totalLectures = this.section.lectures.length;
+//   }
 
-  let totalDuration = 0;
+//   let totalDuration = 0;
 
-  for (const lecture of this.lectures) {
-    totalDuration += lecture.duration;
-  }
-  this.totalDuration = totalDuration;
+//   for (const lecture of this.lectures) {
+//     totalDuration += lecture.duration;
+//   }
+//   this.totalDuration = totalDuration;
 
-  next();
-});
+//   next();
+// });
 
 export const Course = mongoose.model("Course", courseSchema);
