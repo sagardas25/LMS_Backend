@@ -4,9 +4,19 @@ import { Section } from "../models/section.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {
+  deleteMediaFromCloudinary,
+  deleteVideoFromCloudinary,
+} from "../utils/cloudinary.js";
+import { Lecture } from "../models/lecture.model.js";
+import { updateCourseStats } from "./course.controller.js";
 
 export const updateSectionStats = async (sectionId) => {
   const section = await Section.findById(sectionId).populate("lectures");
+
+  if (!section) {
+    throw new ApiError(400, "inside updateSectionStats : section not found");
+  }
 
   let totalDuration = 0;
 
@@ -41,7 +51,7 @@ const createSection = asyncHandler(async (req, res) => {
     throw new ApiError(500, "error occured during creating section");
   }
 
-  // ,.log("section : " , chalk.green(section));
+  // console.log("section : " , chalk.green(section));
   // console.log("section id : " , chalk.yellow(section?._id));
 
   const course = await Course.findById(courseId);
@@ -53,6 +63,7 @@ const createSection = asyncHandler(async (req, res) => {
   }
 
   course.sections.push(section?._id);
+  await updateCourseStats(courseId);
 
   course.save();
 
@@ -69,7 +80,7 @@ const getAllSectionsForCourse = asyncHandler(async (req, res) => {
   if (!course) {
     throw new ApiError(404, "Course not found");
   }
-  
+
   const allSections = course.sections;
 
   if (!allSections) {
@@ -126,11 +137,29 @@ const updateSectionTitle = asyncHandler(async (req, res) => {
     );
 });
 
-// DELETE /sections/:sectionId
-//update it to delte lectures as well
 const deleteSection = asyncHandler(async (req, res) => {
   const sectionId = req.params.sectionId;
+  const section = await Section.findById(sectionId).populate("lectures");
 
+  console.log("(inside deleteSection) sectionId : ", sectionId);
+
+  if (!section) {
+    throw new ApiError(400, "inside deleteSection : section not found");
+  }
+
+  for (const lecture of section.lectures) {
+    if (lecture.videoPublicId) {
+      await deleteVideoFromCloudinary(lecture.videoPublicId);
+    }
+
+    if (lecture.notesPublicId) {
+      await deleteMediaFromCloudinary(lecture.notesPublicId);
+    }
+
+    await Lecture.findByIdAndDelete(lecture._id);
+  }
+
+  await updateSectionStats(sectionId);
   await Section.findByIdAndDelete(sectionId);
 
   return res

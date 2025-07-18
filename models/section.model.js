@@ -47,11 +47,4 @@ sectionSchema.post("save", async function () {
   }
 });
 
-// Run after deleting a section
-sectionSchema.post("remove", async function () {
-  if (this.course) {
-    await updateCourseStats(this.course);
-  }
-});
-
 export const Section = mongoose.model("Section", sectionSchema);

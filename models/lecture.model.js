@@ -29,9 +29,13 @@ const lectureSchema = new mongoose.Schema(
       default: 0,
     },
 
-    publicId: {
+    videoPublicId: {
       type: String,
       required: [true, "Public ID is required"],
+    },
+
+    notesPublicId: {
+      type: String,
     },
 
     isPreview: {

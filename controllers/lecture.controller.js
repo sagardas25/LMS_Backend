@@ -67,7 +67,8 @@ const addLectureToSection = asyncHandler(async (req, res) => {
       duration: DurationInSeconds,
       videoUrl: videoUpload?.secure_url,
       notesUrl: notesUpload?.secure_url || null,
-      publicId: videoUpload?.public_id,
+      videoPublicId: videoUpload?.public_id,
+      notesPublicId: notesUpload?.public_id,
       section: sectionId,
     });
 
