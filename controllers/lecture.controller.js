@@ -174,6 +174,7 @@ const updateLectureMetadata = asyncHandler(async (req, res) => {
       .json(new ApiError(500, "error while updating lecture"));
   }
 });
+
 const getSingleLecture = asyncHandler(async (req, res) => {
   const lectureId = req.params.lectureId;
   console.log("lecture id : ", lectureId);

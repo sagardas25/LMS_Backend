@@ -10,7 +10,8 @@ import {
   getStudentCourseDetails,
   updateCourseDetails,
   searchCourses,
-  getCoursesByCategory
+  getCoursesByCategory,
+  enrollStudent,
 } from "../controllers/course.controller.js";
 
 const router = Router();
@@ -49,6 +50,9 @@ router
 
 router.route("/search").get(searchCourses);
 
-router.route("/course-by-category").get(getCoursesByCategory)
+router.route("/course-by-category").get(getCoursesByCategory);
+router
+  .route("/:courseId/student/:studentId/enroll-student")
+  .post(verifyJwt, authorizeRoles("instructor", "admin"), enrollStudent);
 
 export default router;

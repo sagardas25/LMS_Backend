@@ -8,6 +8,7 @@ import hpp from "hpp";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { ApiResponse } from "./utils/ApiResponse.js";
+import swaggerUi from "swagger-ui-express";
 //import mongoSanitize from "express-mongo-sanitize";
 
 dotenv.config();
@@ -52,6 +53,9 @@ app.use(
   })
 );
 
+// swagger route
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // logger setup
 const morganFormat = ":method :url :status :response-time ms";
 
@@ -92,13 +96,14 @@ import userRouter from "./routes/user.routes.js";
 import adminDashboardRoute from "./routes/adminDashboard.routes.js";
 import courseRoute from "./routes/course.routes.js";
 import ratingRoute from "./routes/rating.routes.js";
-import sectionRoute from "./routes/section.routes.js"
-import healthRoute from "./routes/healthCheck.routes.js"
-import razorpayRoute from "./routes/razorpay.routes.js"
-import lectureRoute from "./routes/lecture.routes.js"
+import sectionRoute from "./routes/section.routes.js";
+import healthRoute from "./routes/healthCheck.routes.js";
+import razorpayRoute from "./routes/razorpay.routes.js";
+import lectureRoute from "./routes/lecture.routes.js";
+import { swaggerSpec } from "./docs.js";
 
 //routes
-app.use("/health",healthRoute );
+app.use("/health", healthRoute);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminDashboardRoute);

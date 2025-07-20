@@ -60,7 +60,4 @@ const promoteToInstructor = asyncHandler(async (req, res) => {
     );
 });
 
-const getCurrernUserProfile1 = asyncHandler(async (req, res) => {});
-const getCurrernUserProfile2 = asyncHandler(async (req, res) => {});
-
 export { getAllStudents, getAllInstructor, promoteToInstructor };

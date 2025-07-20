@@ -353,7 +353,7 @@ const getStudentCourseDetails = asyncHandler(async (req, res) => {
       };
     });
 
-   updateSectionStats(section._id);
+    updateSectionStats(section._id);
 
     return {
       _id: section._id,
@@ -441,6 +441,65 @@ const getCoursesByCategory = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, courses, "Courses fetched by category"));
 });
 
+// this is a temporary controller to enroll student
+// enrolling student will be handled by razorpay controllers (after payment)
+const enrollStudent = asyncHandler(async (req, res) => {
+  const { studentId, courseId } = req.params;
+  const userId = req.user._id;
+
+  const student = await User.findById(studentId);
+
+  if (!student) {
+    throw new ApiError(400, "cannot find student ");
+  }
+
+  const course = await Course.findById(courseId)
+    .select("title description thumbnail enrolledStudents")
+    .populate({
+      path: "instructor",
+      select: "fullName avatar email",
+    });
+
+  if (!course) {
+    throw new ApiError(400, "cannot find course ");
+  }
+
+  const user = await User.findById(userId);
+
+  //console.log(chalk.redBright("user  : "), chalk.greenBright(user));
+
+  if (!user) {
+    throw new ApiError(400, "cannot find user ");
+  }
+
+ 
+  // console.log(
+  //   chalk.redBright("instructor match  : "),
+  //   chalk.greenBright((userId).toString() == (course.instructor?._id).toString())
+  // );
+  // console.log(
+  //   chalk.redBright("admin match  : "),
+  //   chalk.greenBright(user.role != "admin")
+  // );
+
+  if ((userId.toString()) != (course.instructor?._id.toString()) && user.role != "admin") {
+    throw new ApiError(400, "you are not authorize to enroll student");
+  }
+
+  course.enrolledStudents.push(studentId);
+  course.save();
+
+  const data = { course: courseId };
+  student.enrolledCourses.push(data);
+  student.save();
+
+  console.log("student name : ", student.fullName);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, course, "student enrolled succesfully"));
+});
+
 export {
   createNewCourse,
   getMyCreatedCourses,
@@ -451,6 +510,7 @@ export {
   getStudentCourseDetails,
   searchCourses,
   getCoursesByCategory,
+  enrollStudent,
 };
 
 // IMPLEMENT LATER
