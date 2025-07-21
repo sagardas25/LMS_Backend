@@ -84,7 +84,7 @@ courseProgressSchema.pre("save", function (next) {
   next();
 });
 
-export const courseSchema = mongoose.model(
+export const CourseProgress = mongoose.model(
   "CourseProgress",
   courseProgressSchema
 );
