@@ -38,7 +38,7 @@ app.use(hpp());
 //cors configurations
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "https://localhost:5173",
+    origin: process.env.CLIENT_URL || "https://localhost:3000",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
     allowedHeaders: [

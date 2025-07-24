@@ -30,6 +30,69 @@ const generateAccessAndRefreshToken = async (userId) => {
   }
 };
 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  // existing refresh token comes from the body or the cookie
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+
+  //console.log("incomingRefreshToken : " , incomingRefreshToken);
+
+  if (!incomingRefreshToken) {
+    throw new ApiError(401, "Refresh token is required...");
+  }
+
+  try {
+    // decoding the refresh token
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    // fetching user by the token
+    const user = await User.findById(decodedToken?._id).select("+refreshToken");
+
+    //console.log("user : " , user);
+    //console.log("user token in db : " , user.refreshToken);
+
+    // user validation
+    if (!user) {
+      throw new ApiError(401, "Invalid refresh token...");
+    }
+
+    // validating if the decoded token matches with the refresh token of user
+    if (incomingRefreshToken !== user?.refreshToken) {
+      throw new ApiError(401, "Invalid refresh token...");
+    }
+
+    const options = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    };
+
+    // generating  acces token and new refresh token
+    // renamaining refresh token as newRefreshToken in local scope
+    const { accessToken, refreshToken: newRefreshToken } =
+      await generateAccessAndRefreshToken(user._id);
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refressToken", newRefreshToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            accessToken,
+            refreshToken: newRefreshToken,
+          },
+          "access token refreshed succesfully"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(401, "something went wrong during refreshing token...");
+  }
+});
+
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
 
@@ -196,69 +259,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(209, {}, "user logged out succesfully"));
-});
-
-const refreshAccessToken = asyncHandler(async (req, res) => {
-  // existing refresh token comes from the body or the cookie
-  const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken;
-
-  //console.log("incomingRefreshToken : " , incomingRefreshToken);
-
-  if (!incomingRefreshToken) {
-    throw new ApiError(401, "Refresh token is required...");
-  }
-
-  try {
-    // decoding the refresh token
-    const decodedToken = jwt.verify(
-      incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET
-    );
-
-    // fetching user by the token
-    const user = await User.findById(decodedToken?._id).select("+refreshToken");
-
-    //console.log("user : " , user);
-    //console.log("user token in db : " , user.refreshToken);
-
-    // user validation
-    if (!user) {
-      throw new ApiError(401, "Invalid refresh token...");
-    }
-
-    // validating if the decoded token matches with the refresh token of user
-    if (incomingRefreshToken !== user?.refreshToken) {
-      throw new ApiError(401, "Invalid refresh token...");
-    }
-
-    const options = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    };
-
-    // generating  acces token and new refresh token
-    // renamaining refresh token as newRefreshToken in local scope
-    const { accessToken, refreshToken: newRefreshToken } =
-      await generateAccessAndRefreshToken(user._id);
-
-    return res
-      .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refressToken", newRefreshToken, options)
-      .json(
-        new ApiResponse(
-          200,
-          {
-            accessToken,
-            refreshToken: newRefreshToken,
-          },
-          "access token refreshed succesfully"
-        )
-      );
-  } catch (error) {
-    throw new ApiError(401, "something went wrong during refreshing token...");
-  }
 });
 
 const updatePassword = asyncHandler(async (req, res) => {

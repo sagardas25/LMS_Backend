@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
       maxLength: [200, "bio cannot exceed 200 characters"],
-      minLength: [10, "Bio must be at least 10 characters"],
+      minLength: [5, "Bio must be at least 5 characters"],
       match: [
         /^[a-zA-Z0-9\s.,'";:!?()-]{10,200}$/,
         "Bio must be 10 to 200 characters and contain only letters, numbers, and punctuation",

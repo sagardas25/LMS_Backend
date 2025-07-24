@@ -23,7 +23,7 @@ async function startServer() {
     //console.log(status);
     console.log(chalk.redBright("isConnected : " ) , chalk.blueBright(status.isConnected) );
     console.log(chalk.redBright("host : " ) , chalk.blueBright(status.host) );
-    console.log(chalk.redBright("health-check : " ) , chalk.blueBright("http://localhost:8050/health") );
+    console.log(chalk.redBright("health-check : " ) , chalk.blueBright(`http://localhost:${process.env.PORT}/health`) );
 
     app.listen(PORT, () => {
       console.log(
