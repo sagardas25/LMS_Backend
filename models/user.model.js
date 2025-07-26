@@ -16,6 +16,23 @@ const userSchema = new mongoose.Schema(
       minLength: [2, "Name must be at least 2 characters"],
       match: [/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"],
     },
+
+    gender: {
+      type: String,
+      enum: {
+        values: ["male", "female", "not to specify"],
+        message: "Please select a valid gender",
+      },
+    },
+
+    country: {
+      type: String,
+    },
+
+    phoneNumber: {
+      type: String,
+    },
+
     email: {
       type: String,
       required: [true, "Email is requires"],
@@ -71,7 +88,6 @@ const userSchema = new mongoose.Schema(
           default: Date.now,
         },
       },
-
     ],
 
     createdCourse: [
@@ -141,7 +157,7 @@ userSchema.methods.updateLastActive = function () {
 
 //virtual field for total enrolled courses
 userSchema.virtual("totalEnrolledCourses").get(function () {
-  return (this.enrolledCourses?.length || 0);
+  return this.enrolledCourses?.length || 0;
 });
 
 //custom method for generating access token
