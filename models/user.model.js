@@ -25,10 +25,6 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    country: {
-      type: String,
-    },
-
     phoneNumber: {
       type: String,
     },

@@ -3,6 +3,8 @@ import { ApiResponse } from "./utils/ApiResponse.js";
 import app from "./app.js";
 import connectDB, { getDbStatus } from "./db/db.js";
 import chalk from "chalk";
+import { globalErrorHandler } from "./utils/ApiError.js";
+
 
 dotenv.config();
 
@@ -14,6 +16,8 @@ app.use((req, res) => {
     .status(404)
     .json(new ApiResponse(404, "error", "Route not found..!!"));
 });
+
+app.use(globalErrorHandler);
 
 async function startServer() {
   try {
