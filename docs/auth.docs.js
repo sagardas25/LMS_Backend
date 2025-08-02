@@ -7,12 +7,11 @@
 
 /**
  * @swagger
- * /auth/register:
+ * api/v1/auth/register:
  *   post:
+ *     tags:
+ *       - Auth
  *     summary: Register a new user
- *     tags: [Auth]
- *     consumes:
- *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
@@ -29,68 +28,40 @@
  *             properties:
  *               fullName:
  *                 type: string
- *                 example: John Doe
+ *                 example: Jane Doe
  *               email:
  *                 type: string
- *                 format: email
- *                 example: john@example.com
+ *                 example: jane@example.com
  *               password:
  *                 type: string
- *                 format: password
- *                 example: StrongPassword123!
+ *                 example: StrongPass123
  *               gender:
  *                 type: string
- *                 enum: [Male, Female, Other]
- *                 example: Male
+ *                 enum: [male, female, other]
  *               phoneNumber:
  *                 type: string
- *                 pattern: '^[6-9]\\d{9}$'
- *                 example: 9876543210
+ *                 example: "+911234567890"
  *               avatar:
  *                 type: string
  *                 format: binary
  *     responses:
  *       201:
  *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 statusCode:
- *                   type: integer
- *                   example: 201
- *                 data:
- *                   $ref: '#/components/schemas/User'
- *                 message:
- *                   type: string
- *                   example: user registered successfully
  *       400:
- *         description: Bad request (missing fields or empty body)
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Bad request
  *       409:
- *         description: User with same email already exists
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: User already exists
  *       500:
- *         description: Server error during registration
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Server error
  */
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * api/v1/auth/login:
  *   post:
- *     tags: [Auth]
- *     summary: Log in a user
+ *     tags:
+ *       - Auth
+ *     summary: Login user and generate access & refresh tokens
  *     requestBody:
  *       required: true
  *       content:
@@ -103,33 +74,41 @@
  *             properties:
  *               email:
  *                 type: string
+ *                 example: jane@example.com
  *               password:
  *                 type: string
+ *                 example: StrongPass123
  *     responses:
  *       200:
  *         description: User logged in successfully
  *       400:
- *         description: Invalid email or password
+ *         description: Invalid credentials
+ *       500:
+ *         description: Server error
  */
 
 /**
  * @swagger
- * /api/v1/auth/logout:
+ * api/v1/auth/logout:
  *   post:
- *     tags: [Auth]
- *     summary: Log out the user
+ *     tags:
+ *       - Auth
+ *     summary: Logout user and clear tokens
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       209:
  *         description: User logged out successfully
+ *       401:
+ *         description: Unauthorized
  */
 
 /**
  * @swagger
- * /api/v1/auth/refresh-token:
+ * api/v1/auth/refresh-token:
  *   post:
- *     tags: [Auth]
+ *     tags:
+ *       - Auth
  *     summary: Refresh access token using refresh token
  *     requestBody:
  *       required: false
@@ -144,15 +123,39 @@
  *       200:
  *         description: Token refreshed successfully
  *       401:
- *         description: Invalid or expired token
+ *         description: Invalid or missing refresh token
  */
 
 /**
  * @swagger
- * /api/v1/auth/update-password:
+ * api/v1/auth/refresh-token:
  *   post:
- *     tags: [Auth]
- *     summary: Update password of the current user
+ *     tags:
+ *       - Auth
+ *     summary: Refresh access token using refresh token
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Token refreshed successfully
+ *       401:
+ *         description: Invalid or missing refresh token
+ */
+
+/**
+ * @swagger
+ * api/v1/auth/update-password:
+ *   patch:
+ *     tags:
+ *       - Auth
+ *     summary: Update user's password
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -171,17 +174,20 @@
  *                 type: string
  *     responses:
  *       200:
- *         description: Password updated successfully
+ *         description: Password changed successfully
  *       400:
- *         description: Incorrect current password
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
  */
 
 /**
  * @swagger
- * /api/v1/auth/forgot-password:
+ * api/v1/auth/forgot-password:
  *   post:
- *     tags: [Auth]
- *     summary: Request a password reset token
+ *     tags:
+ *       - Auth
+ *     summary: Request a password reset link
  *     requestBody:
  *       required: true
  *       content:
@@ -193,18 +199,22 @@
  *             properties:
  *               email:
  *                 type: string
+ *                 example: jane@example.com
  *     responses:
  *       200:
- *         description: Password reset token generated
+ *         description: Password reset link sent
  *       400:
- *         description: Email required
+ *         description: Email is required
+ *       500:
+ *         description: Server error
  */
 
 /**
  * @swagger
- * /api/v1/auth/reset-password:
+ * /auth/reset-password:
  *   post:
- *     tags: [Auth]
+ *     tags:
+ *       - Auth
  *     summary: Reset password using token
  *     requestBody:
  *       required: true
@@ -225,4 +235,6 @@
  *         description: Password reset successfully
  *       400:
  *         description: Invalid or expired token
+ *       500:
+ *         description: Server error
  */
