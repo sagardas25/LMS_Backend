@@ -29,15 +29,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
-  console.log("avatarLocalPath : " , avatarLocalPath);
-
+  console.log("avatarLocalPath : ", avatarLocalPath);
 
   let avatar;
   try {
     avatar = await uploadOnCloudinary(avatarLocalPath);
     // console.log("uploaded avatar on cloudinary", avatar);
   } catch (error) {
-    console.log("error in uploading avatar : " , error);
+    console.log("error in uploading avatar : ", error);
     throw new ApiError(500, "something went wrong during uploading avatar");
   }
 
@@ -48,8 +47,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     if (bio != "undefined" || bio.trim() != "") updatedData.bio = bio;
     if (avatar?.url) updatedData.avatar = avatar?.url;
 
-   // console.log("bio : " , updatedData.bio);
-    
+    // console.log("bio : " , updatedData.bio);
+
     if (Object.keys(updatedData).length === 0) {
       throw new ApiError(
         400,
@@ -75,7 +74,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         new ApiResponse(200, updatedUser, "user profile updated succesfully")
       );
   } catch (error) {
-    console.log("user updation failed ," , error);
+    console.log("user updation failed ,", error);
 
     // console.log(avatar);
 
@@ -106,16 +105,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 //     throw new ApiError(500, "something went wrong during uploading avatar");
 //   }
 
-
-
-
-
-
-
-
-
-
-
 // })
 
-export { getCurrernUserProfile, updateUserProfile  };
+export { getCurrernUserProfile, updateUserProfile };

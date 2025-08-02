@@ -94,14 +94,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, gender, phoneNumber } = req.body;
 
   // checks if the body is empty
   if (Object.keys(req.body).length === 0 || !req.body) {
     throw new ApiError(400, "body is empty....");
   }
 
-  if ([fullName, email, password].some((fields) => fields?.trim() == "")) {
+  if (
+    [fullName, email, password, phoneNumber, gender].some(
+      (fields) => fields?.trim() == ""
+    )
+  ) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -119,7 +123,8 @@ const registerUser = asyncHandler(async (req, res) => {
     fs.unlink(avatarLocalPath, (err) => {
       if (err) {
         console.log(
-          "error in deleting avatar in case of existing avatar : " , err
+          "error in deleting avatar in case of existing avatar : ",
+          err
         );
       }
     });
@@ -137,7 +142,7 @@ const registerUser = asyncHandler(async (req, res) => {
     avatar = await uploadOnCloudinary(avatarLocalPath);
     // console.log("uploaded avatar on cloudinary", avatar);
   } catch (error) {
-    console.log("error in uploading avatar : " , error);
+    console.log("error in uploading avatar : ", error);
     throw new ApiError(500, "something went wrong during uploading avatar");
   }
 
@@ -147,6 +152,8 @@ const registerUser = asyncHandler(async (req, res) => {
       avatar: avatar?.url || undefined,
       email,
       password,
+      gender,
+      phoneNumber,
     });
 
     // extra fail safe
@@ -162,7 +169,7 @@ const registerUser = asyncHandler(async (req, res) => {
       .status(201)
       .json(new ApiResponse(201, createdUser, "user registered succesfully"));
   } catch (error) {
-    console.log("user creation failed , error : " , error);
+    console.log("user creation failed , error : ", error);
 
     // console.log(avatar);
 
@@ -346,7 +353,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "password reset successfully"));
 });
-
 
 export {
   generateAccessAndRefreshToken,

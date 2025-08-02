@@ -112,5 +112,6 @@ app.use("/api/v1/rating", ratingRoute);
 app.use("/api/v1/section", sectionRoute);
 app.use("/api/v1/razorpay", razorpayRoute);
 app.use("/api/v1/lecture", lectureRoute);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;

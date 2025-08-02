@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
 
     gender: {
       type: String,
+      requied: [true, "gender is required"],
       enum: {
         values: ["male", "female", "not to specify"],
         message: "Please select a valid gender",
@@ -27,6 +28,8 @@ const userSchema = new mongoose.Schema(
 
     phoneNumber: {
       type: String,
+      required: [true, "phone number is requied"],
+      match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"],
     },
 
     email: {

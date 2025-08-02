@@ -28,12 +28,11 @@ router.route("/register").post(
 
 router.route("/login").post(loginUser);
 router.route("/refresh-token").post(refreshAccessToken);
-router.route("/forgot-password").post(forgotPassword)
-router.route("/reset-password").post(resetPassword)
+router.route("/forgot-password").post(forgotPassword);
+router.route("/reset-password").post(resetPassword);
 
 // protected routes
 router.route("/logout").post(verifyJwt, logoutUser);
-router.route("/update-password").post(verifyJwt,updatePassword)
-
+router.route("/update-password").post(verifyJwt, updatePassword);
 
 export default router;

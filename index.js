@@ -5,7 +5,6 @@ import connectDB, { getDbStatus } from "./db/db.js";
 import chalk from "chalk";
 import { globalErrorHandler } from "./utils/ApiError.js";
 
-
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -25,9 +24,15 @@ async function startServer() {
     const status = await getDbStatus();
 
     //console.log(status);
-    console.log(chalk.redBright("isConnected : " ) , chalk.blueBright(status.isConnected) );
-    console.log(chalk.redBright("host : " ) , chalk.blueBright(status.host) );
-    console.log(chalk.redBright("health-check : " ) , chalk.blueBright(`http://localhost:${process.env.PORT}/health`) );
+    console.log(
+      chalk.redBright("isConnected : "),
+      chalk.blueBright(status.isConnected)
+    );
+    console.log(chalk.redBright("host : "), chalk.blueBright(status.host));
+    console.log(
+      chalk.redBright("health-check : "),
+      chalk.blueBright(`http://localhost:${process.env.PORT}/health`)
+    );
 
     app.listen(PORT, () => {
       console.log(
@@ -37,7 +42,7 @@ async function startServer() {
       );
     });
   } catch (error) {
-    console.log("db connection error : " , error);
+    console.log("db connection error : ", error);
 
     process.exit(1);
   }
