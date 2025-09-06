@@ -11,6 +11,7 @@ import {
 import { Course } from "../models/course.model.js";
 import { populate } from "dotenv";
 import { updateSectionStats } from "./section.controller.js";
+import { loggers } from "winston";
 
 export const updateCourseStats = async (courseId) => {
   const course = await Course.findById(courseId).populate({
@@ -116,10 +117,13 @@ const createNewCourse = asyncHandler(async (req, res) => {
       await deleteMediaFromCloudinary(thumbnail.public_id);
     }
 
-    throw new ApiError(
-      500,
-      "something went wrong during creating course so deleted files from cloudinary"
+    console.log(
+      chalk.redBright(
+        " error : something went wrong during creating course so deleted files from cloudinary"
+      )
     );
+
+    throw new ApiError(500, "something went wrong during creating course");
   }
 });
 const getMyCreatedCourses = asyncHandler(async (req, res) => {
@@ -149,6 +153,9 @@ const getMyCreatedCourses = asyncHandler(async (req, res) => {
 });
 const getAllPublishedCourse = asyncHandler(async (req, res) => {
   const instructorId = req.user?._id;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 6;
+  const skip = (page - 1) * limit;
 
   const instructor = await User.findById(instructorId).populate({
     path: "createdCourse",
@@ -162,23 +169,31 @@ const getAllPublishedCourse = asyncHandler(async (req, res) => {
   }
 
   const instructorCourses = instructor.createdCourse;
+  const total = instructorCourses.length;
+  const paginatedCourses = instructorCourses.slice(skip, skip + limit);
 
   if (!instructorCourses) {
     throw new ApiError(400, "cannot find any course");
   }
 
-  return res
-    .status(201)
-    .json(
-      new ApiResponse(
-        201,
-        instructorCourses,
-        "All published courses fetched succesfully"
-      )
-    );
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        courses: paginatedCourses,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      },
+      "All published courses fetched succesfully with pagination"
+    )
+  );
 });
 const getAllUnpublishedCourse = asyncHandler(async (req, res) => {
   const instructorId = req.user?._id;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 6;
+  const skip = (page - 1) * limit;
 
   const instructor = await User.findById(instructorId).populate({
     path: "createdCourse",
@@ -192,20 +207,25 @@ const getAllUnpublishedCourse = asyncHandler(async (req, res) => {
   }
 
   const instructorCourses = instructor.createdCourse;
+  const total = instructorCourses.length;
+  const paginatedCourses = instructorCourses.slice(skip, skip + limit);
 
   if (!instructorCourses) {
     throw new ApiError(400, "cannot find any course");
   }
 
-  return res
-    .status(201)
-    .json(
-      new ApiResponse(
-        201,
-        instructorCourses,
-        "All published courses fetched succesfully"
-      )
-    );
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        courses: paginatedCourses,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      },
+      "All UnPublished courses fetched succesfully with pagination"
+    )
+  );
 });
 const publishCourse = asyncHandler(async (req, res) => {
   const courseId = req.params.courseId;
@@ -309,7 +329,6 @@ const updateCourseDetails = asyncHandler(async (req, res) => {
     );
   }
 });
-
 const getStudentCourseDetails = asyncHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const userId = req.user?._id;
@@ -317,7 +336,7 @@ const getStudentCourseDetails = asyncHandler(async (req, res) => {
   const course = await Course.findById(courseId)
     .populate({
       path: "instructor",
-      select: "name email avatar",
+      select: "fullName email avatar",
     })
 
     .populate({
@@ -472,7 +491,6 @@ const enrollStudent = asyncHandler(async (req, res) => {
     throw new ApiError(400, "cannot find user ");
   }
 
- 
   // console.log(
   //   chalk.redBright("instructor match  : "),
   //   chalk.greenBright((userId).toString() == (course.instructor?._id).toString())
@@ -482,7 +500,10 @@ const enrollStudent = asyncHandler(async (req, res) => {
   //   chalk.greenBright(user.role != "admin")
   // );
 
-  if ((userId.toString()) != (course.instructor?._id.toString()) && user.role != "admin") {
+  if (
+    userId.toString() != course.instructor?._id.toString() &&
+    user.role != "admin"
+  ) {
     throw new ApiError(400, "you are not authorize to enroll student");
   }
 

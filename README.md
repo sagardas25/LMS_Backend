@@ -10,6 +10,7 @@ A scalable and feature-rich **Learning Management System (LMS)** backend built w
 ├── controllers/         # Route logic
 ├── routes/              # Express route handlers
 ├── models/              # Mongoose schemas
+├── docs/                # api documentaion
 ├── middlewares/         # Auth, error handling, etc.
 ├── utils/               # Utility functions
 ├── db/                  # Database  configs
@@ -77,7 +78,15 @@ A scalable and feature-rich **Learning Management System (LMS)** backend built w
    npm run dev
    ```
 
+## API Documentation (OpenAPI / Swagger)
 
+- **Live UI:** Visit [`/api-docs`](http://localhost:8050/api-docs)
+
+- Built with [swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc) + [swagger-ui-express](https://github.com/scottie1984/swagger-ui-express)
+
+- Documented inline using **JSDoc comments** with `@swagger` tags
+
+- **No external schemas used** -- all routes documented with inline objects for clarity
 
 ## 📚 API Route Overview
 
@@ -115,6 +124,7 @@ A scalable and feature-rich **Learning Management System (LMS)** backend built w
 - `POST /:courseId/student/:studentId/enroll-student` — Enroll student to course (admin/instructor)
 
 ---
+
 ### 4. **Section Routes** `/api/sections`
 
 - `POST /add` – Add section to course
@@ -194,6 +204,36 @@ A scalable and feature-rich **Learning Management System (LMS)** backend built w
 
 ---
 
+## 🧠 Contribution Guidelines
+
+Thank you for contributing to this LMS project! Please follow these guidelines to ensure consistency and clarity across commits and code contributions.
+
+---
+
+## 📝 Commit Message Format
+
+We follow a conventional format for commit messages to maintain clean and meaningful Git history.
+
+### 🔧 Format:
+
+- type(scope) : short and meaningful message
+
+### 📦 Common Types:
+
+| Type       | Description                                                |
+| ---------- | ---------------------------------------------------------- |
+| `feat`     | Introduce a new feature                                    |
+| `fix`      | Fix a bug or issue                                         |
+| `docs`     | Add or update documentation                                |
+| `style`    | Code formatting only (whitespace, commas, etc.)            |
+| `refactor` | Code changes that neither fix a bug nor add a feature      |
+| `test`     | Add or update tests                                        |
+| `chore`    | Maintenance tasks such as updating dependencies or configs |
+
+### 📁 Valid Scopes:
+
+Use scopes to indicate the specific part of the app affected:
+
 ## 📝 License
 
 This project is licensed under the [MIT License](./LICENSE)
@@ -204,7 +244,7 @@ This project is licensed under the [MIT License](./LICENSE)
 
 Frontend built with **Next.js + Tailwind + ShadCN UI**
 
-> 📂 [Frontend Repo (Link)](https://github.com/your-username/lms-frontend) – Work in progress.
+> 📂 [Frontend Repo (Link)](https://github.com/sagardas25/lms_frontend) – Work in progress.
 
 ---
 
@@ -212,5 +252,5 @@ Frontend built with **Next.js + Tailwind + ShadCN UI**
 
 For queries or suggestions:  
 **Sagar Das**  
-📧 `your-email@example.com`  
-🔗 [LinkedIn](https://www.linkedin.com/in/your-profile)
+📧 `sagar.xyz05@gmail.com`  
+🔗 [LinkedIn](https://linkedin.com/in/sagar-das-72b955282)

@@ -100,7 +100,7 @@ import sectionRoute from "./routes/section.routes.js";
 import healthRoute from "./routes/healthCheck.routes.js";
 import razorpayRoute from "./routes/razorpay.routes.js";
 import lectureRoute from "./routes/lecture.routes.js";
-import { swaggerSpec } from "./docs.js";
+import { swaggerSpec } from "./utils/docs.js";
 
 //routes
 app.use("/health", healthRoute);

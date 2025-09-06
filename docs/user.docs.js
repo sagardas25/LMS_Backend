@@ -1,5 +1,13 @@
 /**
  * @swagger
+ * tags:
+ *   name: User
+ *   description: user profile routes
+ */
+
+
+/**
+ * @swagger
  * /api/v1/user/me:
  *   get:
  *     tags:
